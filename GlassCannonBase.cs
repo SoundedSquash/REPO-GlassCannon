@@ -1,6 +1,8 @@
-﻿using BepInEx;
+﻿using System.Collections;
+using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using GlassCannon.Patches;
 using HarmonyLib;
 using UnityEngine;
 
@@ -15,72 +17,31 @@ namespace GlassCannon
         
         private readonly Harmony _harmony = new Harmony(PluginGuid);
 
-        private static ConfigEntry<float> DollarMultiplier;
-
-        private static ConfigEntry<int> ItemImpactBehavior;
-
         private static readonly ManualLogSource ManualLogSource = BepInEx.Logging.Logger.CreateLogSource(PluginGuid);
 
         public void Awake()
         {
-            DollarMultiplier = Config.Bind(
-                "General",
-                "DollarMultiplier",
-                2f,
-                "The multiplier that is applied to item value. 2 doubles the value. 1 is the same. Any number between 0 and 1 will lose value.");
-            
-            ItemImpactBehavior = Config.Bind(
-                "General",
-                "ItemImpactBehavior",
-                1,
-                @"0 - Default impacts.  1 - Break on impact.  2 - No impact damage.");
+            // Initialize global objects
+            Settings.Initialize(Config, ManualLogSource);
+            _ = gameObject.AddComponent<ValuableObjectManager>();
             
             // Validate config
-            if (DollarMultiplier.Value > 0f)
+            if (!(Settings.DollarMultiplier.Value > 0f))
             {
-                _harmony.PatchAll(typeof(PhysGrabObjectImpactDetector_Break));
-            }
-            else
-            {
-                ManualLogSource.LogError($"Dollar multiplier value of {DollarMultiplier.Value} is invalid.");
-                return;
+                ManualLogSource.LogError(
+                    $"Invalid Dollar Multiplier value {Settings.DollarMultiplier.Value}. Resetting to {Settings.DollarMultiplierDefault}");
+                Settings.DollarMultiplier.Value = Settings.DollarMultiplierDefault;
             }
             
-            // Validate config
-            if (ItemImpactBehavior.Value >= 0 && ItemImpactBehavior.Value <= 2)
+            if (Settings.ItemImpactBehavior.Value < 0 || Settings.ItemImpactBehavior.Value > 2)
             {
-                _harmony.PatchAll(typeof(ValuableObject_DollarValueSetLogic));
+                ManualLogSource.LogError(
+                    $"Invalid Item Impact Behavior value: {Settings.ItemImpactBehavior.Value}. Resetting to {Settings.ItemImpactBehaviorDefault}");
+                Settings.ItemImpactBehavior.Value = Settings.ItemImpactBehaviorDefault;
             }
-            else
-            {
-                ManualLogSource.LogError($"Enter a valid value for Item Impact Behavior. Invalid value: {ItemImpactBehavior.Value}.");
-                return;
-            }
-            
-            ManualLogSource.LogInfo($"{PluginName} loaded");
-        }
 
-        [HarmonyPatch(typeof(PhysGrabObjectImpactDetector), "Break")]
-        public class PhysGrabObjectImpactDetector_Break
-        {
-            static void Prefix(ref float valueLost, Vector3 _contactPoint, int breakLevel)
-            {
-                valueLost = ItemImpactBehavior.Value switch
-                {
-                    1 => float.MaxValue, // Break on impact
-                    2 => 0f, // No damage
-                    _ => valueLost // Default
-                };
-            }
-        }
-        
-        [HarmonyPatch(typeof(ValuableObject), "DollarValueSetLogic")]
-        public class ValuableObject_DollarValueSetLogic
-        {
-            static void Postfix(ref float ___dollarValueCurrent)
-            {
-                ___dollarValueCurrent *= DollarMultiplier.Value;
-            }
+            _harmony.PatchAll();
+            ManualLogSource.LogInfo($"{PluginName} loaded");
         }
     }
 }
