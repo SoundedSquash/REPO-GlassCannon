@@ -4,7 +4,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-namespace HardMode
+namespace GlassCannon
 {
     [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
     public class GlassCannonBase : BaseUnityPlugin
