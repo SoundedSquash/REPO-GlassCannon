@@ -7,14 +7,13 @@ namespace GlassCannon.Patches
     {
         [HarmonyPatch("StartRoundLogic")]
         [HarmonyPostfix]
+        // This runs AFTER the round is started.
         public static void StartRoundLogicPostfix()
         {
             Settings.Logger.LogDebug("StartRoundLogicPostfix Started");
-            // This runs AFTER the round is started.
-            if (ValuableObjectManager.Instance != null)
-            {
-                ValuableObjectManager.Instance.MultiplyValuableObjectsValue();
-            }
+            
+            ValuableObjectManager.MultiplyValuableObjectsValue();
+            
             Settings.Logger.LogDebug("StartRoundLogicPostfix Ended");
         }
     }

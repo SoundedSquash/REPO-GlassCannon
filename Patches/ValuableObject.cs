@@ -9,11 +9,8 @@ namespace GlassCannon.Patches
         [HarmonyPostfix]
         static void StartPostfix(ValuableObject __instance)
         {
-            if (ValuableObjectManager.Instance != null)
-            {
-                ValuableObjectManager.Instance.AddValuableObject(__instance);
-                Settings.Logger.LogDebug($"ValuableObject {__instance.name} added");
-            }
+            ValuableObjectManager.AddValuableObject(__instance);
+            Settings.Logger.LogDebug($"ValuableObject {__instance.name} added");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace GlassCannon
     {
         private const string PluginGuid = "soundedsquash.glasscannon";
         private const string PluginName = "Glass Cannon";
-        private const string PluginVersion = "1.0.0.0";
+        private const string PluginVersion = "1.0.3.0";
         
         private readonly Harmony _harmony = new Harmony(PluginGuid);
 
@@ -23,7 +23,6 @@ namespace GlassCannon
         {
             // Initialize global objects
             Settings.Initialize(Config, ManualLogSource);
-            _ = gameObject.AddComponent<ValuableObjectManager>();
             
             // Validate config
             if (!(Settings.DollarMultiplier.Value > 0f))
