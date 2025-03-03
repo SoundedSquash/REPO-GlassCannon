@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Photon.Pun;
-using UnityEngine;
 
 namespace GlassCannon.Patches
 {
@@ -18,14 +18,9 @@ namespace GlassCannon.Patches
             }
         }
 
-        public static void RemoveValuableObject(ValuableObject obj)
-        {
-            allValuableObjects.Remove(obj);
-        }
-
         private static List<ValuableObject> GetAllValuableObjects()
         {
-            return new List<ValuableObject>(allValuableObjects);
+            return new List<ValuableObject>(allValuableObjects.Where(valuable => valuable != null));
         }
     
         private static void RemoveAllValuableObjects()

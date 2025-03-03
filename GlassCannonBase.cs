@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using BepInEx;
-using BepInEx.Configuration;
+﻿using BepInEx;
 using BepInEx.Logging;
-using GlassCannon.Patches;
 using HarmonyLib;
-using UnityEngine;
 
 namespace GlassCannon
 {
@@ -13,7 +9,7 @@ namespace GlassCannon
     {
         private const string PluginGuid = "soundedsquash.glasscannon";
         private const string PluginName = "Glass Cannon";
-        private const string PluginVersion = "1.0.3.0";
+        private const string PluginVersion = "1.0.4.0";
         
         private readonly Harmony _harmony = new Harmony(PluginGuid);
 
