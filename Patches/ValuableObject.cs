@@ -5,12 +5,14 @@ namespace GlassCannon.Patches
     [HarmonyPatch(typeof(ValuableObject))]
     public static class ValuableObjectPatches
     {
-        [HarmonyPatch("Start")]
+        [HarmonyPatch("DollarValueSetLogic")]
         [HarmonyPostfix]
-        static void StartPostfix(ValuableObject __instance)
+        static void DollarValueSetLogicPostfix(ValuableObject __instance)
         {
-            ValuableObjectManager.AddValuableObject(__instance);
-            Settings.Logger.LogDebug($"ValuableObject {__instance.name} added");
+            Settings.Logger.LogDebug($"DollarValueSetLogicPostfix called. They want their {__instance.dollarValueOriginal} valuable back.");
+            
+            __instance.dollarValueOriginal *= Settings.DollarMultiplier.Value;
+            __instance.dollarValueCurrent = __instance.dollarValueOriginal;
         }
     }
 }
