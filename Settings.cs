@@ -21,13 +21,15 @@ namespace GlassCannon
                 "General",
                 "DollarMultiplier",
                 2f,
-                "The multiplier that is applied to item value. 2 doubles the value. 1 is the same. Any number between 0 and 1 will lose value.");
+                new ConfigDescription("The multiplier that is applied to item value. 2 doubles the value. 1 is the same. Any number between 0 and 1 will lose value."
+                    , new AcceptableValueRange<float>(1f, 10f)));
             
             ItemImpactBehavior = config.Bind(
                 "General",
                 "ItemImpactBehavior",
                 1,
-                @"0 - Default impacts.  1 - Break on impact.  2 - No impact damage.");
+                new ConfigDescription("0 - Default impacts.  1 - Break on impact.  2 - No impact damage."
+                    , new AcceptableValueRange<int>(0, 2)));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System;
+using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 
@@ -9,7 +10,7 @@ namespace GlassCannon
     {
         private const string PluginGuid = "soundedsquash.glasscannon";
         private const string PluginName = "Glass Cannon";
-        private const string PluginVersion = "1.0.5.0";
+        private const string PluginVersion = "1.0.7.0";
         
         private readonly Harmony _harmony = new Harmony(PluginGuid);
 

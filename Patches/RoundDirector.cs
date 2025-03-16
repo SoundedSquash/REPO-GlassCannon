@@ -9,15 +9,18 @@ namespace GlassCannon.Patches
     {
         private static bool _valueSet;
         private static Level? _currentLevel = RunManager.instance?.levelMainMenu;
-        
+
         [HarmonyPatch("StartRoundLogic")]
         [HarmonyPrefix]
         // This runs before the round is started.
         public static void StartRoundLogicPrefix(RoundDirector __instance, ref int value)
         {
+            //Settings.Logger.LogInfo($"StartRoundLogicPrefix {__instance.currentHaul}");
             // Only for host.
             if (GameManager.instance.gameMode != 0 && !PhotonNetwork.IsMasterClient) return;
 
+            
+            Photon.Realtime.Player player = PhotonNetwork.LocalPlayer;
             // Reset valueSet if level changes.
             if (_currentLevel != RunManager.instance.levelCurrent) _valueSet = false;
             
